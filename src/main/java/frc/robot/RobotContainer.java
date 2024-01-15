@@ -32,7 +32,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Constants.LauncherConstants;
 import frc.robot.commands.CMDAuto;
+import frc.robot.commands.LaunchNote;
+import frc.robot.commands.PrepareLaunch;
 import frc.robot.commands.Arm.CMDArm;
 import frc.robot.commands.Arm.CMDIntake;
 import frc.robot.commands.Arm.CMDShoot;
@@ -164,6 +167,18 @@ for (int i = 0; i < listOfFiles.length; i++) {
    */
   private void configureButtonBindings() {
     OIDriverController1.x().whileTrue(new RunCommand(() -> robotDrive.setX(), robotDrive));
+
+OIDriverController2
+        .a()
+        .whileTrue(
+            new PrepareLaunch(m_sUBShooter)
+                .withTimeout(LauncherConstants.kLauncherDelay)
+                .andThen(new LaunchNote(m_sUBShooter))
+                .handleInterrupt(() -> m_sUBShooter.stop()));
+
+    OIDriverController2.leftTrigger().whileTrue(m_sUBShooter.getIntakeCommand());
+
+
 
 }
 
